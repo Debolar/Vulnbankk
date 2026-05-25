@@ -12,7 +12,12 @@ VALUES
     (8,  'A08', 'PWR{jwt_tampered_admin}',          'JWT None Algorithm — bypass autoryzacji admina', 'medium', 150),
     (9,  'A09', 'PWR{logs_exposed_no_auth}',        'Logi z hasłami dostępne bez autoryzacji',     'easy',   100),
     (10, 'A10', 'PWR{stacktrace_db_url_leaked}',    'Stack trace ujawnia connection string z hasłem', 'easy',  100),
-    (11,  'A02.1', 'PWR{S0urc3_M4ps_L34k}',        'Aplikacja błędnie udostępnia pliki Source Maps na produkcji',   'easy',   100)
+    (11,  'A02.1', 'PWR{S0urc3_M4ps_L34k}',        'Aplikacja błędnie udostępnia pliki Source Maps na produkcji',   'easy',   100),
+    (12,  'A11', 'PWR{open_r3d1rect_phi1sh1ng_v3ct0r}',        'Phishing przez zaufany URL',   'easy',   100),
+    (13, 'A12', 'PWR{ss4f_int3rnal_s3rvice_expos3d}',   'SSRF - dostep do wewnetrznych zasobow', 'medium', 150),
+    (14, 'A13', 'PWR{c0mm4nd_1nj3ct10n_rce}', 'Command Injection - zdalne wykonanie kodu', 'hard', 200),
+    (16, 'A15', 'PWR{p4th_tr4v3rs4l_s3cr3t_r34d}', 'Path Traversal - odczyt plikow poza katalogiem', 'medium', 150),
+    (17, 'A16', 'PWR{p1ckl3_d3s3r14l1z4t10n_rce}', 'Insecure Deserialization - pickle RCE', 'hard', 200),
 ON CONFLICT (id) DO NOTHING;
 
 SELECT setval('flags_id_seq', (SELECT MAX(id) FROM flags));

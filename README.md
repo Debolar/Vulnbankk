@@ -82,6 +82,12 @@ Konta bankowe są **osobne** od kont w portalu CTF. Gracz rejestruje się sam w 
 | A08 | JWT None Algorithm | 🟡 medium | 150 |
 | A09 | Logging & Alerting Failures | 🟢 easy | 100 |
 | A10 | Exceptional Conditions | 🟢 easy | 100 |
+| A11 | Open Redirect | 🟢 easy | 100 |
+| A12 | Falsyfikacja zapytania po stronie serwera (SSRF) | 🟡 medium | 150 |
+| A13 | Command Injection - zdalne wykonanie kodu | 🔴 hard | 200 |
+| A14 | Mass Assignment - eskalacja uprawnień | 🟡 medium | 150 |
+| A15 | Path Traversal - odczyt plikow poza katalogiem | 🟡 medium | 150 |
+| A16 | Insecure Deserialization - pickle RCE | 🔴 hard | 200 |
 
 Hinty i submit flag dostępne po zalogowaniu do portalu CTF (`/ctf`).
 

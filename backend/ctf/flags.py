@@ -43,6 +43,9 @@ CHALLENGE_META = [
     {"id": "A10", "name": "Exceptional Conditions", "category": "OWASP A10:2021", "difficulty": "easy", "points": 100,
      "hint": "Wyślij nieprawidłowy parametr do kalkulatora kredytu. Flask DEBUG ujawni stack trace.",
      "endpoint": "GET /api/loans/calculate?amount=abc&rate=2"},
+     {"id": "A11","name": "Open Redirect","category": "OWASP A01:2021","difficulty": "easy","points": 100,
+      "hint": "Parametr next= nie jest walidowany — możesz przekierować na dowolny URL",
+      "endpoint": "GET /api/challenges/a11/redirect?next="},
 ]
 
 _SPECIAL_FLAGS = {
