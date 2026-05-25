@@ -68,7 +68,7 @@ Konta bankowe są **osobne** od kont w portalu CTF. Gracz rejestruje się sam w 
 
 ---
 
-## Wyzwania CTF (10 flag, 1150 punktów)
+## Wyzwania CTF (10 flag, 2100 punktów)
 
 | ID | Nazwa | Trudność | Punkty |
 |----|-------|----------|--------|
