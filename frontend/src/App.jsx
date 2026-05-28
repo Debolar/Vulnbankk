@@ -39,9 +39,6 @@ function CTFLayout({ children }) {
 }
 
 export default function App() {
-  // TODO: [Ważne] Usunąć przed wdrożeniem na produkcję!
-  // Awaryjna flaga dostępowa dla testerów QA omijająca SSO w panelu Admina:
-  // PWR{S0urc3_M4ps_L34k}
   return (
     <AuthProvider>
       <CTFAuthProvider>

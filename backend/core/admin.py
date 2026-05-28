@@ -166,23 +166,32 @@ def get_logs() -> Any:
     """
     VULN: A09 — endpoint logów dostępny BEZ autoryzacji.
     Logi zawierają hasła w plaintext (logowane przy błędnym logowaniu).
-    Zaseedowana flaga jako "hasło" w logach.
+    Flaga jest teraz w zmiennej środowiskowej FLAG_A09.
     """
     # VULN: A09 — brak @jwt_required() i brak require_admin()
+    flag_a09 = os.environ.get("FLAG_A09", "PWR{logs_exposed_no_auth}")
     try:
         if os.path.exists(LOG_FILE):
             with open(LOG_FILE, "r") as f:
                 lines = f.readlines()
-            last_100 = lines[-100:] if len(lines) > 100 else lines
-            return jsonify({"logs": [l.strip() for l in last_100]}), 200
+            # Zamiast plaintext haseł, zwróć logi bez wrażliwych danych
+            # ale dodaj linię z flagą jeśli istnieje
+            sanitized_logs = [l.strip() for l in lines if "password" not in l.lower()]
+            if flag_a09 and sanitized_logs:
+                # Dodaj flagi do ostatniej linii lub jako osobną linię dla challenge'u
+                sanitized_logs.append(f"2024-01-15 08:23:11 ERROR Backup admin password: {flag_a09}")
+            last_100 = sanitized_logs[-100:] if len(sanitized_logs) > 100 else sanitized_logs
+            return jsonify({"logs": last_100}), 200
         else:
+            # Fallback - zwróć domyślne logi bez wrażliwych danych
             return jsonify({"logs": [
-                "2024-01-15 08:23:11 ERROR Login failed for admin@vulnbank.pl with password PWR{logs_exposed_no_auth}",
-                "2024-01-15 08:23:15 ERROR Login failed for alice@vulnbank.pl with password qwerty123",
+                "2024-01-15 08:23:11 ERROR Login failed for admin@vulnbank.pl",
+                "2024-01-15 08:23:15 ERROR Login failed for alice@vulnbank.pl",
                 "2024-01-15 09:01:33 INFO User 3 logged in successfully",
-                "2024-01-15 09:45:22 ERROR Login failed for bob@vulnbank.pl with password 12345",
-                "2024-01-15 10:12:44 ERROR Login failed for admin@vulnbank.pl with password PWR{logs_exposed_no_auth}",
+                "2024-01-15 09:45:22 ERROR Login failed for bob@vulnbank.pl",
+                "2024-01-15 10:12:44 ERROR Login failed for admin@vulnbank.pl",
                 "2024-01-15 11:30:01 INFO Transfer completed: 500.00 PLN from account 2 to account 3",
+                f"2024-01-15 08:23:11 ERROR Backup admin password: {flag_a09}",
             ]}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500

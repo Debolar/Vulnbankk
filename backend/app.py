@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify
 from config import Config
 from extensions import init_extensions, db
 
@@ -8,6 +8,34 @@ def create_app():
     app.config.from_object(Config)
 
     init_extensions(app)
+
+    # Global error handlers
+    @app.errorhandler(400)
+    def bad_request(e):
+        return jsonify({"error": "Nieprawidłowe żądanie", "status": 400}), 400
+
+    @app.errorhandler(404)
+    def not_found(e):
+        return jsonify({"error": "Zasób nie znaleziony", "status": 404}), 404
+
+    @app.errorhandler(403)
+    def forbidden(e):
+        return jsonify({"error": "Brak dostępu", "status": 403}), 403
+
+    @app.errorhandler(500)
+    def internal_error(e):
+        db.session.rollback()
+        import logging
+        logging.error(f"Internal server error: {str(e)}")
+        return jsonify({"error": "Wewnętrzny błąd serwera", "status": 500}), 500
+
+    @app.errorhandler(Exception)
+    def handle_exception(e):
+        import logging
+        logging.error(f"Unhandled exception: {type(e).__name__}")
+        if app.debug:
+            raise
+        return jsonify({"error": "Wewnętrzny błąd serwera", "status": 500}), 500
 
     with app.app_context():
         from core.auth import auth_bp

@@ -12,9 +12,15 @@ export default defineConfig({
         changeOrigin: true,
       },
     },
+    sourcemap: true,  // Włącz source maps tylko w dev
   },
-  // Wymuszenie generowania Source Maps na produkcji
   build: {
-    sourcemap: true,
+    sourcemap: false,  // WYŁĄCZ source maps na produkcji
+    minify: "terser",
+    terserOptions: {
+      compress: {
+        drop_console: true,  // Usuń console.log w prod
+      },
+    },
   },
 });
