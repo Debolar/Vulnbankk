@@ -17,9 +17,9 @@ VALUES
     (13, 'A12', 'PWR{ss4f_int3rnal_s3rvice_expos3d}',   'SSRF - dostep do wewnetrznych zasobow', 'medium', 150),
     (14, 'A13', 'PWR{c0mm4nd_1nj3ct10n_rce}', 'Command Injection - zdalne wykonanie kodu', 'hard', 200),
     (15, 'A14', 'PWR{m4ss_4ss1gnm3nt_priv_esc}', 'Mass Assignment - eskalacja uprawnień', 'medium', 150),
-    (15, 'A14', 'PWR{m4ss_4ss1gnm3nt_priv_esc}', 'Mass Assignment - eskalacja uprawnień', 'medium', 150),
     (16, 'A15', 'PWR{p4th_tr4v3rs4l_s3cr3t_r34d}', 'Path Traversal - odczyt plikow poza katalogiem', 'medium', 150),
     (17, 'A16', 'PWR{p1ckl3_d3s3r14l1z4t10n_rce}', 'Insecure Deserialization - pickle RCE', 'hard', 200),
     (18, 'A17', 'PWR{exposed_internal_token}', 'Sensitive Information Disclosure - wrażliwe dane w API response', 'easy', 100),
+    (19, 'A18', 'PWR{t1mpl4t3_inj3ct10n}', 'Server-Side Template Injection - złe renderowanie Jinja2', 'hard', 200),
 
 SELECT setval('flags_id_seq', (SELECT MAX(id) FROM flags));

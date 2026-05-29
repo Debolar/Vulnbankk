@@ -64,6 +64,9 @@ CHALLENGE_META = [
     {"id": "A17", "name": "Sensitive Information Disclosure", "category": "Data Exposure", "difficulty": "easy", "points": 100,
      "hint": "Zaloguj się i pobierz swój profil. Czy widzisz coś, co wygląda na flagę?",
      "endpoint": "GET /api/challenges/a17/profile"},
+    {"id": "A18", "name": "Server-Side Template Injection", "category": "CWE-94", "difficulty": "hard", "points": 200,
+     "hint": "Renderyzowany jest Twój szablon Jinja2. Spróbuj odczytać plik z flagą przez SSTI.",
+     "endpoint": "GET /api/challenges/a18/render?template="},
 ]
 
 _SPECIAL_FLAGS = {
