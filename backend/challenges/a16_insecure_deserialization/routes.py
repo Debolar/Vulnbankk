@@ -18,7 +18,7 @@ def challenge_info() -> Any:
     return jsonify({
         "challenge": "A16",
         "name": "Insecure Deserialization - pickle RCE",
-        "category": "OWASP A08:2021",
+        "category": "CWE-502",
         "difficulty": "hard",
         "points": 200,
         "description": (

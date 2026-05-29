@@ -2,7 +2,7 @@
 
 ## Metadane
 - **ID:** A05
-- **Kategoria:** OWASP A05:2021 - Injection
+- **Kategoria:** OWASP A05:2025 - Injection
 - **Trudność:** medium
 - **Punkty:** 150
 - **Flaga:** `PWR{sqli_transactions_leaked}`
@@ -54,5 +54,5 @@ result = db.session.execute(
 ```
 
 ## Referencje
-- [OWASP A05:2021 - Injection](https://owasp.org/Top10/A03_2021-Injection/)
+- OWASP A05:2025 - Injection
 - [CWE-89: Improper Neutralization of Special Elements in SQL Command](https://cwe.mitre.org/data/definitions/89.html)

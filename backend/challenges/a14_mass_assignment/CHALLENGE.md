@@ -2,7 +2,7 @@
 
 ## Metadane
 - **ID:** A14
-- **Kategoria:** OWASP A01:2021
+- **Kategoria:** CWE-915 - Improperly Controlled Modification of Dynamically-Determined Object Attributes
 - **Trudnosc:** medium
 - **Punkty:** 150
 - **Flaga:** `PWR{m4ss_4ss1gnm3nt_pr1v_3sc}`

@@ -2,7 +2,7 @@
 
 ## Metadane
 - **ID:** A15
-- **Kategoria:** OWASP A01:2021
+- **Kategoria:** CWE-22 - Path Traversal
 - **Trudnosc:** medium
 - **Punkty:** 150
 - **Flaga:** `PWR{p4th_tr4v3rs4l_s3cr3t_r34d}`

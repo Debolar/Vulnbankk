@@ -15,7 +15,7 @@ def challenge_info() -> Any:
     return jsonify({
         "challenge": "A01",
         "name": "Broken Access Control — IDOR",
-        "category": "OWASP A01:2021",
+        "category": "OWASP A01:2025",
         "difficulty": "easy",
         "points": 100,
         "description": (

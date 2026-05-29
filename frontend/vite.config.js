@@ -12,14 +12,14 @@ export default defineConfig({
         changeOrigin: true,
       },
     },
-    sourcemap: true,  // Włącz source maps tylko w dev
   },
   build: {
-    sourcemap: false,  // WYŁĄCZ source maps na produkcji
+    // A19 relies on source maps being publicly available in the production build.
+    sourcemap: true,
     minify: "terser",
     terserOptions: {
       compress: {
-        drop_console: true,  // Usuń console.log w prod
+        drop_console: true,
       },
     },
   },

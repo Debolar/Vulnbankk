@@ -2,7 +2,7 @@
 
 ## Metadane
 - **ID:** A07
-- **Kategoria:** OWASP A07:2021 - Identification and Authentication Failures
+- **Kategoria:** OWASP A07:2025 - Authentication Failures
 - **Trudność:** easy
 - **Punkty:** 100
 - **Flaga:** `PWR{no_ratelimit_bruteforce}` — w profilu boba po zalogowaniu
@@ -60,5 +60,5 @@ def login():
 ```
 
 ## Referencje
-- [OWASP A07:2021](https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/)
+- OWASP A07:2025 - Authentication Failures
 - [CWE-307: Improper Restriction of Excessive Authentication Attempts](https://cwe.mitre.org/data/definitions/307.html)

@@ -2,7 +2,7 @@
 
 ## Metadane
 - **ID:** A17
-- **Kategoria:** Sensitive Data Exposure
+- **Kategoria:** CWE-200 - Exposure of Sensitive Information
 - **Trudność:** easy
 - **Punkty:** 100
 - **Flaga:** `PWR{exposed_internal_token}`
@@ -58,6 +58,5 @@ def get_user_profile(user_id):
 ```
 
 ## Referencje
-- [OWASP A02:2021 - Cryptographic Failures](https://owasp.org/Top10/A02_2021-Cryptographic_Failures/)
 - [CWE-200: Exposure of Sensitive Information to an Unauthorized Actor](https://cwe.mitre.org/data/definitions/200.html)
 - [CWE-215: Information Exposure Through Debug Information](https://cwe.mitre.org/data/definitions/215.html)

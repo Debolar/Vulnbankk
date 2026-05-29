@@ -2,7 +2,7 @@
 
 ## Metadane
 - **ID:** A09
-- **Kategoria:** OWASP A09:2021 - Security Logging and Monitoring Failures
+- **Kategoria:** OWASP A09:2025 - Security Logging and Alerting Failures
 - **Trudność:** easy
 - **Punkty:** 100
 - **Flaga:** `PWR{logs_exposed_no_auth}`
@@ -57,5 +57,5 @@ logger.warning(f"Failed login attempt for {email}")
 ```
 
 ## Referencje
-- [OWASP A09:2021](https://owasp.org/Top10/A09_2021-Security_Logging_and_Monitoring_Failures/)
+- OWASP A09:2025 - Security Logging and Alerting Failures
 - [CWE-532: Insertion of Sensitive Information into Log File](https://cwe.mitre.org/data/definitions/532.html)

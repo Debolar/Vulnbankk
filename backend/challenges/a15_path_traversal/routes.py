@@ -18,7 +18,7 @@ def challenge_info() -> Any:
     return jsonify({
         "challenge": "A15",
         "name": "Path Traversal - odczyt plikow poza katalogiem",
-        "category": "OWASP A01:2021",
+        "category": "CWE-22",
         "difficulty": "medium",
         "points": 150,
         "description": (

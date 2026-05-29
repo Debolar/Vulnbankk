@@ -2,7 +2,7 @@
 
 ## Metadane
 - **ID:** AXX
-- **Kategoria:** OWASP AXX:2021 - Nazwa Kategorii
+- **Kategoria:** OWASP AXX:2025 - Nazwa Kategorii
 - **Trudność:** easy / medium / hard
 - **Punkty:** 100 / 150 / 200
 - **Flaga:** `PWR{twoja_flaga_tutaj}`
@@ -31,5 +31,5 @@ curl -X POST http://localhost:5000/api/ctf/flags/check \
 Krótki opis jak wyeliminować podatność.
 
 ## Referencje
-- [OWASP AXX:2021](https://owasp.org/Top10/AXX_2021-Nazwa/)
+- OWASP AXX:2025
 - [CWE-XXX](https://cwe.mitre.org/data/definitions/XXX.html)

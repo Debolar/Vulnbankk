@@ -33,10 +33,6 @@ def get_profile() -> Any:
     if user.email == "charlie@vulnbank.pl":
         profile["flag"] = "PWR{md5_no_salt_cracked}"
 
-    # Flaga A06 dostępna dla alice po przejęciu konta
-    if user.email == "alice@vulnbank.pl":
-        profile["flag"] = "PWR{insecure_password_reset}"
-
     # Flaga A07 dostępna dla boba po brute-force
     if user.email == "bob@vulnbank.pl":
         profile["flag"] = "PWR{no_ratelimit_bruteforce}"

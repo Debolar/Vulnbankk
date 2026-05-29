@@ -31,8 +31,9 @@ export default function Profile() {
     e.preventDefault();
     setMsg({ type: "", text: "" });
     try {
-      await apiClient.post("/auth/forgot-password", resetForm);
-      setMsg({ type: "success", text: "Hasło zmienione przez reset (VULN A06)" });
+      const res = await apiClient.post("/auth/forgot-password", resetForm);
+      const flagText = res.data?.flag ? ` Flaga: ${res.data.flag}` : "";
+      setMsg({ type: "success", text: `Hasło zmienione przez reset (VULN A06).${flagText}` });
       setResetForm({ email: "", pesel: "", new_password: "" });
     } catch (err) {
       setMsg({ type: "error", text: err.response?.data?.error || "Błąd" });
@@ -68,7 +69,7 @@ export default function Profile() {
         )}
         {profile?.flag && (
           <div className="mt-4 pt-4 border-t border-bank-border bg-yellow-900/20 rounded-md p-3">
-            <p className="text-bank-warning text-xs font-medium">CTF Flag (A04/A06)</p>
+            <p className="text-bank-warning text-xs font-medium">CTF Flag</p>
             <p className="text-bank-text font-mono text-sm mt-1">{profile.flag}</p>
           </div>
         )}

@@ -119,4 +119,8 @@ def forgot_password() -> Any:
 
     user.password_hash = md5_hash(new_password)
     db.session.commit()
-    return jsonify({"message": "Hasło zostało zmienione"}), 200
+
+    response = {"message": "Hasło zostało zmienione"}
+    if user.email == "alice@vulnbank.pl":
+        response["flag"] = "PWR{insecure_password_reset}"
+    return jsonify(response), 200

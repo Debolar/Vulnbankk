@@ -16,7 +16,7 @@ def challenge_info() -> Any:
     return jsonify({
         "challenge": "A18",
         "name": "Server-Side Template Injection",
-        "category": "CWE-94",
+        "category": "OWASP A05:2025",
         "difficulty": "hard",
         "points": 200,
         "description": (

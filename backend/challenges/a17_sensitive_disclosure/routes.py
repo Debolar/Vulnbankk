@@ -17,7 +17,7 @@ def challenge_info() -> Any:
     return jsonify({
         "challenge": "A17",
         "name": "Sensitive Information Disclosure",
-        "category": "Data Exposure",
+        "category": "CWE-200",
         "difficulty": "easy",
         "points": 100,
         "description": (

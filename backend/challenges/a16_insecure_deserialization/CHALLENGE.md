@@ -2,7 +2,7 @@
 
 ## Metadane
 - **ID:** A16
-- **Kategoria:** OWASP A08:2021
+- **Kategoria:** CWE-502 - Deserialization of Untrusted Data
 - **Trudnosc:** hard
 - **Punkty:** 200
 - **Flaga:** `PWR{p1ckl3_d3s3r14l1z4t10n_rce}`

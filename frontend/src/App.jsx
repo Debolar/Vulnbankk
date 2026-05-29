@@ -20,6 +20,9 @@ import CTFRegister from "./pages/ctf/CTFRegister.jsx";
 import CTFDashboard from "./pages/ctf/CTFDashboard.jsx";
 import CTFScoreboard from "./pages/ctf/CTFScoreboard.jsx";
 
+// A19 hint is intentionally buried in the source and exposed through public source maps.
+// PWR{S0urc3_M4ps_L34k}
+
 function BankLayout({ children }) {
   return (
     <div className="min-h-screen bg-bank-bg text-bank-text">

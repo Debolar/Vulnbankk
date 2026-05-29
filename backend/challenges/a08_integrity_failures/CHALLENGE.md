@@ -2,7 +2,7 @@
 
 ## Metadane
 - **ID:** A08
-- **Kategoria:** OWASP A08:2021 - Software and Data Integrity Failures
+- **Kategoria:** OWASP A08:2025 - Software or Data Integrity Failures
 - **Trudność:** medium
 - **Punkty:** 150
 - **Flaga:** `PWR{jwt_tampered_admin}` — w odpowiedzi /api/admin/dashboard
@@ -69,6 +69,6 @@ jwt.decode(token, secret, algorithms=["HS256"])  # lista bez "none"
 ```
 
 ## Referencje
-- [OWASP A08:2021](https://owasp.org/Top10/A08_2021-Software_and_Data_Integrity_Failures/)
+- OWASP A08:2025 - Software or Data Integrity Failures
 - [CVE-2015-9235 - JWT None Algorithm](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2015-9235)
 - [jwt.io](https://jwt.io)

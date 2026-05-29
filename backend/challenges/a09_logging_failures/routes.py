@@ -15,7 +15,7 @@ def challenge_info() -> Any:
     return jsonify({
         "challenge": "A09",
         "name": "Logging & Alerting Failures — logi bez autoryzacji",
-        "category": "OWASP A09:2021",
+        "category": "OWASP A09:2025",
         "difficulty": "easy",
         "points": 100,
         "description": (

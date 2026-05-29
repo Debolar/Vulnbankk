@@ -2,7 +2,7 @@
 
 ## Metadane
 - **ID:** A02
-- **Kategoria:** OWASP A02:2021 - Security Misconfiguration
+- **Kategoria:** OWASP A02:2025 - Security Misconfiguration
 - **Trudność:** easy
 - **Punkty:** 100
 - **Flaga:** `PWR{debug_config_exposed}`
@@ -42,5 +42,5 @@ Wyjście będzie zawierać:
 4. Dodaj autoryzację na KAŻDY endpoint diagnostyczny
 
 ## Referencje
-- [OWASP A02:2021 - Security Misconfiguration](https://owasp.org/Top10/A02_2021-Security_Misconfiguration/)
+- OWASP A02:2025 - Security Misconfiguration
 - [CWE-215: Insertion of Sensitive Information Into Debugging Code](https://cwe.mitre.org/data/definitions/215.html)

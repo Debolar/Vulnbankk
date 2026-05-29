@@ -15,7 +15,7 @@ def challenge_info() -> Any:
     return jsonify({
         "challenge": "A11",
         "name": "Open Redirect - phishing przez zaufany URL",
-        "category": "OWASP A01:2021",
+        "category": "CWE-601",
         "difficulty": "easy",
         "points": 100,
         "description": (

@@ -2,7 +2,7 @@
 
 ## Metadane
 - **ID:** A13
-- **Kategoria:** OWASP A03:2021
+- **Kategoria:** OWASP A05:2025 - Injection
 - **Trudnosc:** hard
 - **Punkty:** 200
 - **Flaga:** `PWR{c0mm4nd_1nj3ct10n_rce}`

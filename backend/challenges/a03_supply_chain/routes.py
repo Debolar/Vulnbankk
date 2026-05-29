@@ -15,7 +15,7 @@ def challenge_info() -> Any:
     return jsonify({
         "challenge": "A03",
         "name": "Software Supply Chain Failures",
-        "category": "OWASP A03:2021",
+        "category": "OWASP A03:2025",
         "difficulty": "easy",
         "points": 100,
         "description": (

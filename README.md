@@ -68,7 +68,7 @@ Konta bankowe są **osobne** od kont w portalu CTF. Gracz rejestruje się sam w 
 
 ---
 
-## Wyzwania CTF (10 flag, 2100 punktów)
+## Wyzwania CTF (19 flag, 2500 punktów)
 
 | ID | Nazwa | Trudność | Punkty |
 |----|-------|----------|--------|
@@ -83,13 +83,19 @@ Konta bankowe są **osobne** od kont w portalu CTF. Gracz rejestruje się sam w 
 | A09 | Logging & Alerting Failures | 🟢 easy | 100 |
 | A10 | Exceptional Conditions | 🟢 easy | 100 |
 | A11 | Open Redirect | 🟢 easy | 100 |
-| A12 | Falsyfikacja zapytania po stronie serwera (SSRF) | 🟡 medium | 150 |
-| A13 | Command Injection - zdalne wykonanie kodu | 🔴 hard | 200 |
-| A14 | Mass Assignment - eskalacja uprawnień | 🟡 medium | 150 |
-| A15 | Path Traversal - odczyt plikow poza katalogiem | 🟡 medium | 150 |
-| A16 | Insecure Deserialization - pickle RCE | 🔴 hard | 200 |
+| A12 | SSRF | 🟡 medium | 150 |
+| A13 | Command Injection | 🔴 hard | 200 |
+| A14 | Mass Assignment | 🟡 medium | 150 |
+| A15 | Path Traversal | 🟡 medium | 150 |
+| A16 | Insecure Deserialization | 🔴 hard | 200 |
+| A17 | Sensitive Information Disclosure | 🟢 easy | 100 |
+| A18 | Server-Side Template Injection | 🔴 hard | 200 |
+| A19 | Source Maps Leak | 🟢 easy | 100 |
+| A20 | Race Condition - Double Spend | 🔴 hard | 200 |
 
-Hinty i submit flag dostępne po zalogowaniu do portalu CTF (`/ctf`).
+Hinty i submit flag dostępne po zalogowaniu do portalu CTF (`/ctf`). Lista wyzwań jest pobierana z backendu, więc nie ma już ręcznego duplikowania danych we frontendzie.
+
+> A19 to zadanie na source maps frontendu. Można je rozwiązać przez DevTools albo bezpośredni odczyt `assets/*.map`.
 
 ---
 

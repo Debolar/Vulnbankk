@@ -15,7 +15,7 @@ def challenge_info() -> Any:
     return jsonify({
         "challenge": "A04",
         "name": "Cryptographic Failures — MD5 bez soli",
-        "category": "OWASP A04:2021",
+        "category": "OWASP A04:2025",
         "difficulty": "medium",
         "points": 150,
         "description": (

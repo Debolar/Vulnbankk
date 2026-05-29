@@ -3,26 +3,37 @@ import ctfClient from "../../api/ctfClient.js";
 import { useCTFAuth } from "../../context/CTFAuthContext.jsx";
 
 const MEDALS = ["🥇", "🥈", "🥉"];
-const MAX_POINTS = 1150;
 
 export default function CTFScoreboard() {
   const { player } = useCTFAuth();
+  const [challengeMeta, setChallengeMeta] = useState([]);
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    ctfClient.get("/scoreboard/")
-      .then((res) => setRows(res.data))
+    Promise.all([
+      ctfClient.get("/flags/"),
+      ctfClient.get("/scoreboard/"),
+    ])
+      .then(([flagsRes, scoreRes]) => {
+        setChallengeMeta(flagsRes.data);
+        setRows(scoreRes.data);
+      })
       .catch(() => setError("Nie udało się załadować scoreboard"))
       .finally(() => setLoading(false));
   }, []);
+
+  const maxPoints = challengeMeta.reduce((sum, challenge) => sum + challenge.points, 0);
+  const challengeCount = challengeMeta.length;
 
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-ctf-text font-mono">Scoreboard</h1>
-        <p className="text-ctf-muted text-sm mt-1">Ranking graczy — max {MAX_POINTS} pkt</p>
+        <p className="text-ctf-muted text-sm mt-1">
+          Ranking graczy — max {loading ? "…" : maxPoints} pkt
+        </p>
       </div>
 
       {loading && (
@@ -79,7 +90,7 @@ export default function CTFScoreboard() {
                       )}
                     </td>
                     <td className="px-5 py-4 text-right text-ctf-muted text-sm font-mono">
-                      {row.solved_count}/10
+                      {row.solved_count}/{challengeCount || "?"}
                     </td>
                     <td className="px-5 py-4 text-right">
                       <span className={`font-bold font-mono text-lg ${row.total_points > 0 ? "text-ctf-accent" : "text-ctf-muted"}`}>
@@ -91,11 +102,11 @@ export default function CTFScoreboard() {
                         <div className="w-24 bg-ctf-bg rounded-full h-1.5 border border-ctf-border">
                           <div
                             className="bg-ctf-accent h-full rounded-full transition-all"
-                            style={{ width: `${(row.total_points / MAX_POINTS) * 100}%` }}
+                            style={{ width: `${maxPoints > 0 ? (row.total_points / maxPoints) * 100 : 0}%` }}
                           />
                         </div>
                         <span className="text-ctf-muted text-xs font-mono w-10 text-right">
-                          {Math.round((row.total_points / MAX_POINTS) * 100)}%
+                          {Math.round(maxPoints > 0 ? (row.total_points / maxPoints) * 100 : 0)}%
                         </span>
                       </div>
                     </td>

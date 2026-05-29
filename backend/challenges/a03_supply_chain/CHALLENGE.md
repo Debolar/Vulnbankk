@@ -2,7 +2,7 @@
 
 ## Metadane
 - **ID:** A03
-- **Kategoria:** OWASP A03:2021 - Software and Data Integrity Failures (Supply Chain)
+- **Kategoria:** OWASP A03:2025 - Software Supply Chain Failures
 - **Trudność:** easy
 - **Punkty:** 100
 - **Flaga:** `PWR{vulnerable_dependency_found}`
@@ -46,4 +46,4 @@ Naprawiono w wersji 5.4 przez wymuszenie `yaml.safe_load()`.
 
 ## Referencje
 - [CVE-2020-14343](https://nvd.nist.gov/vuln/detail/CVE-2020-14343)
-- [OWASP A03:2021](https://owasp.org/Top10/A08_2021-Software_and_Data_Integrity_Failures/)
+- OWASP A03:2025 - Software Supply Chain Failures

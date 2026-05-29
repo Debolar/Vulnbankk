@@ -16,7 +16,7 @@ def challenge_info() -> Any:
     return jsonify({
         "challenge": "A12",
         "name": "SSRF - falsyfikacja zapytania po stronie serwera",
-        "category": "OWASP A10:2021",
+        "category": "CWE-918",
         "difficulty": "medium",
         "points": 150,
         "description": (

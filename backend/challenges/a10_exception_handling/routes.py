@@ -15,7 +15,7 @@ def challenge_info() -> Any:
     return jsonify({
         "challenge": "A10",
         "name": "Exceptional Conditions — stack trace z connection stringiem",
-        "category": "OWASP A10:2021",
+        "category": "OWASP A10:2025",
         "difficulty": "easy",
         "points": 100,
         "description": (

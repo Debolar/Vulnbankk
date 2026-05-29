@@ -2,7 +2,7 @@
 
 ## Metadane
 - **ID:** A18
-- **Kategoria:** CWE-94 / Server-Side Template Injection
+- **Kategoria:** OWASP A05:2025 - Injection / CWE-94
 - **Trudność:** hard
 - **Punkty:** 200
 - **Flaga:** `PWR{t1mpl4t3_inj3ct10n}`

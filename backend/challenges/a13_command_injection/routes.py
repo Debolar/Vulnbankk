@@ -17,7 +17,7 @@ def challenge_info() -> Any:
     return jsonify({
         "challenge": "A13",
         "name": "Command Injection - zdalne wykonanie kodu",
-        "category": "OWASP A03:2021",
+        "category": "OWASP A05:2025",
         "difficulty": "hard",
         "points": 200,
         "description": (

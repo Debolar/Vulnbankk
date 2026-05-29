@@ -18,7 +18,7 @@ def challenge_info() -> Any:
     return jsonify({
         "challenge": "A14",
         "name": "Mass Assignment - eskalacja uprawnien",
-        "category": "OWASP A01:2021",
+        "category": "CWE-915",
         "difficulty": "medium",
         "points": 150,
         "description": (

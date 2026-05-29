@@ -2,7 +2,7 @@
 
 ## Metadane
 - **ID:** A10
-- **Kategoria:** OWASP A10:2021 - Server-Side Request Forgery / Exceptional Conditions
+- **Kategoria:** OWASP A10:2025 - Mishandling of Exceptional Conditions
 - **Trudność:** easy
 - **Punkty:** 100
 - **Flaga:** `PWR{stacktrace_db_url_leaked}`
@@ -54,6 +54,6 @@ app.run(debug=False)  # lub FLASK_DEBUG=false w env
 ```
 
 ## Referencje
-- [OWASP A10:2021](https://owasp.org/Top10/A10_2021-Server-Side_Request_Forgery/)
+- OWASP A10:2025 - Mishandling of Exceptional Conditions
 - [Werkzeug Debugger](https://werkzeug.palletsprojects.com/en/latest/debug/)
 - [CWE-209: Generation of Error Message Containing Sensitive Information](https://cwe.mitre.org/data/definitions/209.html)

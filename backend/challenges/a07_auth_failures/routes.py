@@ -15,7 +15,7 @@ def challenge_info() -> Any:
     return jsonify({
         "challenge": "A07",
         "name": "Authentication Failures — Brute-force bez rate limitingu",
-        "category": "OWASP A07:2021",
+        "category": "OWASP A07:2025",
         "difficulty": "easy",
         "points": 100,
         "description": (

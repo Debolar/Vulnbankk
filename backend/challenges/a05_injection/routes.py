@@ -15,7 +15,7 @@ def challenge_info() -> Any:
     return jsonify({
         "challenge": "A05",
         "name": "SQL Injection — wyszukiwarka transakcji",
-        "category": "OWASP A05:2021",
+        "category": "OWASP A05:2025",
         "difficulty": "medium",
         "points": 150,
         "description": (

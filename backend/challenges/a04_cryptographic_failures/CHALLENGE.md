@@ -2,7 +2,7 @@
 
 ## Metadane
 - **ID:** A04
-- **Kategoria:** OWASP A04:2021 - Cryptographic Failures
+- **Kategoria:** OWASP A04:2025 - Cryptographic Failures
 - **Trudność:** medium
 - **Punkty:** 150
 - **Flaga:** `PWR{md5_no_salt_cracked}` — w profilu charlie po zalogowaniu
@@ -54,5 +54,5 @@ password_hash = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
 ```
 
 ## Referencje
-- [OWASP A04:2021](https://owasp.org/Top10/A04_2021-Insecure_Design/)
+- OWASP A04:2025 - Cryptographic Failures
 - [CWE-916: Use of Password Hash With Insufficient Computational Effort](https://cwe.mitre.org/data/definitions/916.html)

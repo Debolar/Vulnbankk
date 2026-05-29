@@ -18,7 +18,9 @@ export default function FlagChecker({ challengeId, onSuccess }) {
       setResult({ success: correct, message, points });
       if (correct && !already_solved && onSuccess) onSuccess(res.data);
     } catch (err) {
-      setResult({ success: false, message: err.response?.data?.error || "Błąd połączenia" });
+      const data = err.response?.data;
+      const message = data?.error || data?.message || err.message || "Błąd połączenia";
+      setResult({ success: false, message });
     } finally {
       setLoading(false);
     }

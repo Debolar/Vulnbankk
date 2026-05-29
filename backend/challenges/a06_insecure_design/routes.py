@@ -15,7 +15,7 @@ def challenge_info() -> Any:
     return jsonify({
         "challenge": "A06",
         "name": "Insecure Design — błędna logika resetu hasła",
-        "category": "OWASP A06:2021",
+        "category": "OWASP A06:2025",
         "difficulty": "easy",
         "points": 100,
         "description": (
@@ -26,7 +26,8 @@ def challenge_info() -> Any:
         "hint": (
             "1. Pobierz PESEL alice przez IDOR: GET /api/accounts/1 lub "
             "zaloguj się jako bob i sprawdź profil alice przez /api/profile/ z ID. "
-            "2. POST /api/auth/forgot-password z emailem alice i jej PESELem."
+            "2. POST /api/auth/forgot-password z emailem alice i jej PESELem. "
+            "Flaga jest w odpowiedzi resetu."
         ),
         "endpoint": "POST /api/auth/forgot-password",
         "body": '{"email": "alice@vulnbank.pl", "pesel": "???", "new_password": "hacked"}',

@@ -2,7 +2,7 @@
 
 ## Metadane
 - **ID:** A12
-- **Kategoria:** OWASP A10:2021
+- **Kategoria:** CWE-918 - Server-Side Request Forgery
 - **Trudnosc:** medium
 - **Punkty:** 150
 - **Flaga:** `PWR{ss4f_int3rnal_s3rvice_expos3d}`

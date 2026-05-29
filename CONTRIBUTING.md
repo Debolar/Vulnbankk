@@ -23,7 +23,7 @@ Flaga zdobyta przez atak na `backend/challenges/` jest submitowana przez portal 
 mkdir backend/challenges/a11_twoja_nazwa
 ```
 
-Konwencja nazewnictwa: `aXX_krótka_nazwa_podatności` (małe litery, podkreślniki).
+Konwencja nazewnictwa: `aXX_krótka_nazwa_podatności` (małe litery, podkreślniki, bez kropek w nazwie folderu).
 
 ---
 
@@ -59,7 +59,7 @@ def challenge_info() -> Any:
     return jsonify({
         "challenge": "A11",
         "name": "Twoja Podatność",
-        "category": "OWASP AXX:2021",
+        "category": "OWASP AXX:2025",
         "difficulty": "easy",
         "points": 100,
         "description": "Opis podatności",
@@ -92,7 +92,7 @@ def vulnerable_endpoint() -> Any:
 
 ## Metadane
 - **ID:** A11
-- **Kategoria:** OWASP AXX:2021
+- **Kategoria:** OWASP AXX:2025
 - **Trudność:** easy
 - **Punkty:** 100
 - **Flaga:** `PWR{twoja_flaga}`
@@ -129,27 +129,16 @@ Flaga jest sprawdzana przez portal CTF (`POST /api/ctf/flags/check`) — nie prz
 
 ---
 
-## Krok 6: Dodaj do listy w portalu CTF
+## Krok 6: Dodaj do metadanych CTF
 
-W `frontend/src/pages/ctf/CTFDashboard.jsx` dodaj do tablicy `CHALLENGES`:
+Zaktualizuj tablicę `CHALLENGE_META` w `backend/ctf/flags.py` oraz wpis w `db/seeds/flags.sql`.
+Frontend portalu CTF pobiera listę wyzwań z `GET /api/ctf/flags/`, więc nie duplikuj ręcznie
+tej samej listy w `frontend/src/pages/ctf/CTFDashboard.jsx` ani w `CTFScoreboard.jsx`.
 
-```jsx
-{
-  id: "A11", name: "Twoja Podatność", category: "OWASP AXX:2021",
-  difficulty: "easy", points: 100,
-  hint: "Wskazówka dla uczestnika",
-  endpoint: "GET /api/challenges/a11/vulnerable",
-},
-```
-
-Tak samo zaktualizuj tablicę `CHALLENGE_META` w `backend/ctf/flags.py`:
-
-```python
-{"id": "A11", "name": "Twoja Podatność", "category": "OWASP AXX:2021",
- "difficulty": "easy", "points": 100,
- "hint": "Wskazówka dla uczestnika",
- "endpoint": "GET /api/challenges/a11/vulnerable"},
-```
+Jeśli dodajesz zadanie zależne od source maps, pamiętaj też o zmianach w frontendzie:
+- `frontend/vite.config.js` musi generować source maps w buildzie produkcyjnym
+- `frontend/nginx.conf` nie może blokować plików `*.map`
+- w jednym z bundlowanych plików frontendu musi istnieć komentarz z flagą, żeby challenge był rozwiązywalny
 
 ---
 
@@ -189,9 +178,9 @@ curl -X POST http://localhost:5000/api/ctf/flags/check \
 - [ ] Nagłówek metadanych na górze `routes.py`
 - [ ] Type hints w funkcjach Pythona
 - [ ] Flaga w formacie `PWR{...}` w `db/seeds/flags.sql`
-- [ ] Wpis w `CHALLENGES` w `frontend/src/pages/ctf/CTFDashboard.jsx`
 - [ ] Wpis w `CHALLENGE_META` w `backend/ctf/flags.py`
 - [ ] Wpis w tabeli w `README.md`
+- [ ] Jeśli challenge zależy od frontendu, sprawdź build produkcyjny i nginx
 - [ ] Podatność wpleciona w funkcję bankową (nie osobna demo-strona)
 - [ ] Zrestartuj Docker i przetestuj exploit ręcznie
 
@@ -204,6 +193,7 @@ curl -X POST http://localhost:5000/api/ctf/flags/check \
 | Folder | `aXX_krótka_nazwa` (małe litery) |
 | Blueprint name | `challenge_aXX` |
 | URL prefix | `/api/challenges/aXX` |
+| Source maps | `a19_source_maps` / `/api/challenges/a19` |
 | Flaga | `PWR{słowa_opisujące_podatność}` |
 | Trudność | `easy` (100 pkt) / `medium` (150 pkt) / `hard` (200 pkt) |
 

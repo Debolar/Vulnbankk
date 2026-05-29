@@ -15,7 +15,7 @@ def challenge_info() -> Any:
     return jsonify({
         "challenge": "A08",
         "name": "Integrity Failures — JWT None Algorithm Bypass",
-        "category": "OWASP A08:2021",
+        "category": "OWASP A08:2025",
         "difficulty": "medium",
         "points": 150,
         "description": (
