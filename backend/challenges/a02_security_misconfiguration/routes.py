@@ -42,12 +42,12 @@ def list_dependencies() -> Any:
             "version": dist.version,
         }
         # VULN: A03 — podatna biblioteka z flagą
-        if dist.project_name == "PyYAML" and dist.version == "5.3.1":
+        if dist.project_name.lower() == "pyyaml" and dist.version == "5.3.1":
             pkg["cve"] = "CVE-2020-14343"
             pkg["severity"] = "CRITICAL"
             pkg["description"] = "Arbitrary code execution via yaml.load() without Loader"
             pkg["flag"] = "PWR{vulnerable_dependency_found}"
-        elif dist.project_name == "Pillow" and dist.version == "9.0.0":
+        elif dist.project_name.lower() == "pillow" and dist.version == "9.0.0":
             pkg["cve"] = "CVE-2022-22817"
             pkg["severity"] = "HIGH"
             pkg["description"] = "PIL.ImageMath.eval allows evaluation of arbitrary expressions"

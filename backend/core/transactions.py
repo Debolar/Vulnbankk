@@ -1,8 +1,6 @@
-import csv
-import io
 from typing import Any
 
-from flask import Blueprint, jsonify, request, Response
+from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from extensions import db
@@ -134,36 +132,3 @@ def search_transactions() -> Any:
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-
-@transactions_bp.route("/export", methods=["GET"])
-@jwt_required()
-def export_csv() -> Any:
-    user_id = int(get_jwt_identity())
-    account = Account.query.filter_by(user_id=user_id).first()
-    if not account:
-        return Response("", mimetype="text/csv")
-
-    txs = Transaction.query.filter(
-        (Transaction.from_account_id == account.id) |
-        (Transaction.to_account_id == account.id)
-    ).order_by(Transaction.created_at.desc()).all()
-
-    output = io.StringIO()
-    writer = csv.writer(output)
-    writer.writerow(["ID", "Z konta", "Na konto", "Kwota", "Tytuł", "Data"])
-    for t in txs:
-        writer.writerow([
-            t.id,
-            t.from_account.iban if t.from_account else "",
-            t.to_account.iban if t.to_account else "",
-            float(t.amount),
-            t.title,
-            t.created_at.isoformat(),
-        ])
-
-    output.seek(0)
-    return Response(
-        output.getvalue(),
-        mimetype="text/csv",
-        headers={"Content-Disposition": "attachment;filename=transactions.csv"},
-    )

@@ -34,11 +34,6 @@ export default function History() {
     setSearching(false);
   };
 
-  const handleExport = () => {
-    const token = localStorage.getItem("vulnbank_token");
-    window.open(`/api/transactions/export`, "_blank");
-  };
-
   const formatDate = (iso) => new Date(iso).toLocaleString("pl-PL");
 
   if (loading) return <div className="text-bank-muted text-center py-12">Ładowanie...</div>;
@@ -50,10 +45,6 @@ export default function History() {
           <h1 className="text-2xl font-bold text-bank-text">Historia transakcji</h1>
           <p className="text-bank-muted text-sm mt-1">Wszystkie Twoje przelewy</p>
         </div>
-        <button onClick={handleExport}
-          className="bg-bank-card border border-bank-border hover:border-bank-accent text-bank-text text-sm px-4 py-2 rounded-md transition-colors">
-          Eksportuj CSV
-        </button>
       </div>
 
       <form onSubmit={handleSearch} className="flex gap-2">
