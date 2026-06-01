@@ -597,7 +597,7 @@ kod źródłowy da się odtworzyć z `assets/*.map`.
 Rozwiązanie manualne w przeglądarce:
 - Otwórz stronę aplikacji.
 - Wciśnij F12, aby otworzyć Narzędzia deweloperskie.
-- Przejdź do zakładki Sources (Źródła).
+- Przejdź do zakładki Sources (Źródła)/debugger.
 - Rozwiń drzewo plików (np. src/App.jsx).
 - Przeczytaj oryginalny kod i znajdź komentarz z flagą.
 
