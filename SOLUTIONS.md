@@ -593,8 +593,15 @@ kod źródłowy da się odtworzyć z `assets/*.map`.
 ### Exploit
 
 ```bash
-# Otwórz aplikację w przeglądarce i wejdź w DevTools -> Sources.
-# Szukaj komentarza z flagą w oryginalnych plikach frontendu.
+
+Rozwiązanie manualne w przeglądarce:
+- Otwórz stronę aplikacji.
+- Wciśnij F12, aby otworzyć Narzędzia deweloperskie.
+- Przejdź do zakładki Sources (Źródła).
+- Rozwiń drzewo plików (np. src/App.jsx).
+- Przeczytaj oryginalny kod i znajdź komentarz z flagą.
+
+
 curl http://localhost:3000/assets/index-*.js.map | grep 'PWR{'
 ```
 
